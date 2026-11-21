@@ -1,0 +1,10 @@
+# Only Agora's custom-LLM callback (/llm/*) and the read-only health probe are
+# reachable through the tunnel. Everything else (/mcp, /api/*) stays local-only.
+on_http_request:
+  - expressions:
+      - "!(req.url.path.startsWith('/llm/') || req.url.path == '/api/health')"
+    actions:
+      - type: custom-response
+        config:
+          status_code: 404
+          content: "not found"
